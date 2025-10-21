@@ -1,0 +1,332 @@
+basePath: /api
+definitions:
+  http.UpdateAuthorRequest:
+    properties:
+      gender:
+        type: boolean
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  http.UpdateBookRequest:
+    properties:
+      authorID:
+        type: integer
+      title:
+        type: string
+    required:
+    - title
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Это пример API для управления авторами и книгами
+  title: Author API
+  version: "1.0"
+paths:
+  /authors:
+    get:
+      description: Возвращает список всех авторов
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'authors: список авторов'
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить всех авторов
+      tags:
+      - authors
+    post:
+      consumes:
+      - application/json
+      description: Создает нового автора с указанным именем и полом
+      parameters:
+      - description: Данные автора
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 'author: созданный автор'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: неверный формат данных
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Создать автора
+      tags:
+      - authors
+  /authors/{id}:
+    delete:
+      description: Удаляет автора по указанному ID
+      parameters:
+      - description: ID автора
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: сообщение об успешном удалении
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: id пустое
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Удалить автора
+      tags:
+      - authors
+    get:
+      description: Возвращает автора по указанному ID
+      parameters:
+      - description: ID автора
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'author: найденный автор'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: id пустое
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: автор не найден
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить автора по ID
+      tags:
+      - authors
+    patch:
+      consumes:
+      - application/json
+      description: Обновляет данные автора (имя и пол)
+      parameters:
+      - description: ID автора
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные автора
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/http.UpdateAuthorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'update_author: обновленный автор'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: неверный формат данных
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: автор не найден
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обновить автора
+      tags:
+      - authors
+  /books:
+    get:
+      description: Возвращает список всех книг
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'books: список книг'
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить все книги
+      tags:
+      - books
+    post:
+      consumes:
+      - application/json
+      description: Создает новую книгу с указапнным названием и id автора
+      parameters:
+      - description: Данные книги
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: 'book: созданная книга'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: неверный формат данных
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Создать книгу
+      tags:
+      - books
+  /books/{id}:
+    delete:
+      description: Удаляет книгу по указанному ID
+      parameters:
+      - description: ID книги
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: сообщение об успешном удалении
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: id пустое
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Удалить книгу
+      tags:
+      - books
+    get:
+      description: Возвращает книгу по указанному ID
+      parameters:
+      - description: ID книги
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'book: найденная книга'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: id пустое
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: книга не найдена
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Получить книгу по ID
+      tags:
+      - books
+    patch:
+      consumes:
+      - application/json
+      description: Обновляет данные книги
+      parameters:
+      - description: ID книги
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные книги
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/http.UpdateBookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 'update_author: обновленная книга'
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: неверный формат данных
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: книга не найден
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: ошибка сервера
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Обновить книгу
+      tags:
+      - books
+swagger: "2.0"

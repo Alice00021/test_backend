@@ -1,0 +1,17 @@
+.env
+
+.idea/
+
+.vscode/
+
+
+my_key
+my_key.pub
+
+storage/
+
+temp/
+
+test-go/
+
+json-storage/
