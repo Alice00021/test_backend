@@ -120,7 +120,6 @@ func (uc *UseCase) UpdateOperation(ctx context.Context, inp entity.UpdateOperati
 			mapContainer      = make(map[entity.Address]entity.Container)
 			totalTime         int64
 			commandsToCreate  []*entity.OperationCommand
-			commandsToUpdate  []*entity.OperationCommand
 			idsToKeep         []int64
 		)
 
@@ -161,27 +160,23 @@ func (uc *UseCase) UpdateOperation(ctx context.Context, inp entity.UpdateOperati
 			// Если команда уже существует — обновляем
 			if commandInput.ID != nil {
 				operationCommand.ID = *commandInput.ID
-				commandsToUpdate = append(commandsToUpdate, operationCommand)
+				if err := uc.opcRepo.Update(txCtx, operationCommand); err != nil {
+					return fmt.Errorf("%s - uc.opcRepo.Update: %w", op, err)
+				}
 				idsToKeep = append(idsToKeep, *commandInput.ID)
 			} else {
 				commandsToCreate = append(commandsToCreate, operationCommand)
 			}
 		}
 
-		for _, command := range commandsToUpdate {
-			if err := uc.opcRepo.Update(txCtx, command); err != nil {
-				return fmt.Errorf("%s - uc.opcRepo.Update: %w", op, err)
-			}
+		if err := uc.opcRepo.DeleteIfNotInOperationCommandIds(txCtx, inp.ID, idsToKeep); err != nil {
+			return fmt.Errorf("%s - uc.opcRepo.DeleteExceptIDs: %w", op, err)
 		}
 
 		if len(commandsToCreate) > 0 {
 			if err := uc.opcRepo.Create(txCtx, inp.ID, commandsToCreate); err != nil {
 				return fmt.Errorf("%s - uc.opcRepo.Create: %w", op, err)
 			}
-		}
-
-		if err := uc.opcRepo.DeleteIfNotInOperationCommandIds(txCtx, inp.ID, idsToKeep); err != nil {
-			return fmt.Errorf("%s - uc.opcRepo.DeleteExceptIDs: %w", op, err)
 		}
 
 		operation := &entity.Operation{
