@@ -9,7 +9,7 @@ import (
 	"test_go/pkg/transactional"
 )
 
-type UseCase struct {
+type useCase struct {
 	transactional.Transactional
 	opRepo  repo.OperationRepo
 	opcRepo repo.OperationCommandsRepo
@@ -23,8 +23,8 @@ func New(
 	opCmdRepo repo.OperationCommandsRepo,
 	cmdRepo repo.CommandRepo,
 	l logger.Interface,
-) *UseCase {
-	return &UseCase{
+) *useCase {
+	return &useCase{
 		Transactional: t,
 		opRepo:        opRepo,
 		opcRepo:       opCmdRepo,
@@ -33,7 +33,7 @@ func New(
 	}
 }
 
-func (uc *UseCase) CreateOperation(ctx context.Context, inp entity.CreateOperationInput) (*entity.Operation, error) {
+func (uc *useCase) CreateOperation(ctx context.Context, inp entity.CreateOperationInput) (*entity.Operation, error) {
 	op := "OperationUseCase - CreateOperation"
 
 	var operation entity.Operation
@@ -106,7 +106,7 @@ func (uc *UseCase) CreateOperation(ctx context.Context, inp entity.CreateOperati
 	return &operation, nil
 }
 
-func (uc *UseCase) UpdateOperation(ctx context.Context, inp entity.UpdateOperationInput) error {
+func (uc *useCase) UpdateOperation(ctx context.Context, inp entity.UpdateOperationInput) error {
 	op := "OperationUseCase - UpdateOperation"
 
 	return uc.RunInTransaction(ctx, func(txCtx context.Context) error {
@@ -194,13 +194,23 @@ func (uc *UseCase) UpdateOperation(ctx context.Context, inp entity.UpdateOperati
 	})
 }
 
-func (uc *UseCase) DeleteOperation(ctx context.Context, id int64) error {
+func (uc *useCase) GetOperations(ctx context.Context) (map[int64]*entity.Operation, error) {
+	operations, err := uc.opRepo.GetAll(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("OperationUseCase - GetOperations - uc.opRepo.GetAll: %w", err)
+	}
+
+	return operations, nil
+}
+
+func (uc *useCase) DeleteOperation(ctx context.Context, id int64) error {
 	op := "OperationUseCase - DeleteOperation"
 
 	return uc.RunInTransaction(ctx, func(txCtx context.Context) error {
 		if err := uc.opRepo.DeleteById(txCtx, id); err != nil {
 			return fmt.Errorf("%s - uc.opRepo.DeleteById: %w", op, err)
 		}
+
 		if err := uc.opcRepo.DeleteByOperationId(txCtx, id); err != nil {
 			return fmt.Errorf("%s - uc.opсRepo.DeleteByOperationId: %w", op, err)
 		}

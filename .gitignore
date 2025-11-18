@@ -15,3 +15,5 @@ temp/
 test-go/
 
 json-storage/
+
+logs/

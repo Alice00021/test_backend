@@ -40,6 +40,7 @@ type (
 	}
 
 	OperationRepo interface {
+		GetAll(context.Context) (map[int64]*entity.Operation, error)
 		Create(context.Context, *entity.Operation) (*entity.Operation, error)
 		GetById(context.Context, int64) (*entity.Operation, error)
 		Update(context.Context, *entity.Operation) error

@@ -38,9 +38,9 @@ func NewUseCase(
 	userUc := user.New(t, l, repo.UserRepo, jwtManager, conf.LocalFileStorage.BasePath, &conf.EmailConfig, txMtx)
 	authorUc := author.New(t, repo.AuthorRepo, l)
 	bookUc := book.New(t, repo.BookRepo, l)
-	exportUc := export.New(authorUc, bookUc, l, conf.LocalFileStorage.ExportPath)
 	commandUc := command.New(t, repo.CommandRepo, conf.LocalFileStorage, l)
 	operationUc := operation.New(t, repo.OperationRepo, repo.OperationCommandsRepo, repo.CommandRepo, l)
+	exportUc := export.New(authorUc, bookUc, commandUc, operationUc, l, conf.LocalFileStorage.ExportPath)
 	return &UseCase{
 		Auth:      authUc,
 		Author:    authorUc,

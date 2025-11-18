@@ -25,7 +25,10 @@ import (
 
 // Run creates objects via constructors.
 func Run(cfg *config.Config) {
-	l := logger.New(cfg.Log.Level)
+	l := logger.NewMultipleWriter(
+		logger.Level(cfg.Log.Level),
+		logger.FileName(cfg.Log.FileName),
+	)
 
 	// Repository
 	pg, err := postgres.New(cfg.PG.URL, postgres.MaxPoolSize(cfg.PG.PoolMax))

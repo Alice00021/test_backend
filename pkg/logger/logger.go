@@ -2,10 +2,10 @@ package logger
 
 import (
 	"fmt"
+	"github.com/natefinch/lumberjack"
+	"github.com/rs/zerolog"
 	"os"
 	"strings"
-
-	"github.com/rs/zerolog"
 )
 
 // Interface -.
@@ -17,9 +17,20 @@ type Interface interface {
 	Fatal(message interface{}, args ...interface{})
 }
 
+const (
+	_defaultMaxFileSize = 5  // 5Mb
+	_defaultMaxFileAge  = 30 // 30 days
+	_defaultFileName    = "app.log"
+	_defaultLevel       = "info"
+)
+
 // Logger -.
 type Logger struct {
-	logger *zerolog.Logger
+	logger      *zerolog.Logger
+	Level       string
+	MaxFileAge  int
+	MaxFileSize int
+	FileName    string
 }
 
 var _ Interface = (*Logger)(nil)
@@ -50,6 +61,52 @@ func New(level string) *Logger {
 	return &Logger{
 		logger: &logger,
 	}
+}
+
+func NewMultipleWriter(opts ...Option) *Logger {
+	l := &Logger{
+		MaxFileAge:  _defaultMaxFileAge,
+		MaxFileSize: _defaultMaxFileSize,
+		FileName:    _defaultFileName,
+		Level:       _defaultLevel,
+	}
+
+	for _, opt := range opts {
+		opt(l)
+	}
+
+	var level zerolog.Level
+
+	switch strings.ToLower(l.Level) {
+	case "error":
+		level = zerolog.ErrorLevel
+	case "warn":
+		level = zerolog.WarnLevel
+	case "info":
+		level = zerolog.InfoLevel
+	case "debug":
+		level = zerolog.DebugLevel
+	default:
+		level = zerolog.InfoLevel
+	}
+
+	zerolog.SetGlobalLevel(level)
+
+	lumberjackLogger := &lumberjack.Logger{
+		Filename: l.FileName,
+		MaxSize:  l.MaxFileSize,
+		MaxAge:   l.MaxFileAge,
+		Compress: true,
+	}
+
+	levelWriter := zerolog.MultiLevelWriter(os.Stdout, lumberjackLogger)
+	skipFrameCount := 3
+	zeroLogger := zerolog.New(levelWriter).With().Timestamp().
+		CallerWithSkipFrameCount(zerolog.CallerSkipFrameCount + skipFrameCount).Logger()
+
+	l.logger = &zeroLogger
+
+	return l
 }
 
 // Debug -.

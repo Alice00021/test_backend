@@ -71,3 +71,12 @@ func (uc *useCase) UpdateCommands(ctx context.Context) error {
 	}
 	return nil
 }
+
+func (uc *useCase) GetCommands(ctx context.Context) (map[string]entity.Command, error) {
+	commands, err := uc.repo.GetBySystemNames(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("CommandUseCase - GetCommands - uc.repo.GetBySystemNames: %w", err)
+	}
+
+	return commands, nil
+}

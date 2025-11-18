@@ -149,8 +149,10 @@ func (r *CommandRepo) GetBySystemNames(ctx context.Context) (map[string]entity.C
 
 		items[e.SystemName] = e
 	}
+
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("%s - rows.Err: %w", op, err)
 	}
+
 	return items, nil
 }

@@ -44,14 +44,20 @@ type (
 	Export interface {
 		GenerateExcelFile(context.Context) (*excelize.File, error)
 		SaveToFile(*excelize.File) (string, error)
+		ExportCommandsToCSV(context.Context) ([]byte, string, error)
+		ExportCommandsToPDF(context.Context) ([]byte, string, error)
+		ExportOperationsToCSV(context.Context) ([]byte, string, error)
+		ExportOperationsToPDF(context.Context) ([]byte, string, error)
 	}
 
 	Command interface {
 		UpdateCommands(context.Context) error
+		GetCommands(context.Context) (map[string]entity.Command, error)
 	}
 
 	Operation interface {
 		CreateOperation(context.Context, entity.CreateOperationInput) (*entity.Operation, error)
+		GetOperations(context.Context) (map[int64]*entity.Operation, error)
 		UpdateOperation(context.Context, entity.UpdateOperationInput) error
 		DeleteOperation(context.Context, int64) error
 	}

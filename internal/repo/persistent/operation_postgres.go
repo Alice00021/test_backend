@@ -42,6 +42,89 @@ func (r *OperationRepo) Create(ctx context.Context, e *entity.Operation) (*entit
 	return r.GetById(ctx, id)
 }
 
+func (r *OperationRepo) GetAll(ctx context.Context) (map[int64]*entity.Operation, error) {
+	op := "OperationRepo - GetAll"
+
+	sqlBuilder := r.Builder.
+		Select(
+			"op.id", "op.created_at", "op.updated_at", "op.deleted_at",
+			"op.name", "op.description", "op.average_time",
+			"opc.command_id", "c.name", "c.system_name", "c.default_address", "opc.address",
+		).
+		From("operations op").
+		LeftJoin("operation_commands opc ON opc.operation_id = op.id").
+		LeftJoin("commands c ON opc.command_id = c.id").
+		Where("op.deleted_at IS NULL").
+		OrderBy("op.id DESC")
+
+	sql, args, err := sqlBuilder.ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("%s - r.Builder: %w", op, err)
+	}
+
+	client := r.GetClient(ctx)
+	rows, err := client.Query(ctx, sql, args...)
+	if err != nil {
+		return nil, fmt.Errorf("%s - client.Query: %w", op, err)
+	}
+	defer rows.Close()
+
+	items := make(map[int64]*entity.Operation)
+
+	for rows.Next() {
+		var (
+			e                  entity.Operation
+			commandId          *int64
+			commandName        *string
+			commandSystemName  *string
+			commandDefaultAddr *string
+			commandAddress     *string
+		)
+
+		if err = rows.Scan(
+			&e.ID, &e.CreatedAt, &e.UpdatedAt, &e.DeletedAt,
+			&e.Name, &e.Description, &e.AverageTime,
+			&commandId, &commandName, &commandSystemName, &commandDefaultAddr, &commandAddress,
+		); err != nil {
+			return nil, fmt.Errorf("%s - row.Scan: %w", op, err)
+		}
+
+		if _, ok := items[e.ID]; !ok {
+			items[e.ID] = &entity.Operation{
+				Entity: entity.Entity{
+					ID:        e.ID,
+					CreatedAt: e.CreatedAt,
+					UpdatedAt: e.UpdatedAt,
+					DeletedAt: e.DeletedAt,
+				},
+				Name:        e.Name,
+				Description: e.Description,
+				AverageTime: e.AverageTime,
+				Commands:    make([]*entity.OperationCommand, 0),
+			}
+		}
+
+		operation := items[e.ID]
+
+		if commandId != nil {
+			operation.Commands = append(operation.Commands, &entity.OperationCommand{
+				ID: *commandId,
+				Command: entity.Command{
+					Entity: entity.Entity{
+						ID: *commandId,
+					},
+					Name:           *commandName,
+					SystemName:     *commandSystemName,
+					DefaultAddress: entity.Address(*commandDefaultAddr),
+				},
+				Address: entity.Address(*commandAddress),
+			})
+		}
+	}
+
+	return items, nil
+}
+
 func (r *OperationRepo) GetById(ctx context.Context, id int64) (*entity.Operation, error) {
 	op := "OperationRepo - GetById"
 

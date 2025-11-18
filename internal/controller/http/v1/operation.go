@@ -20,6 +20,7 @@ func NewOperationRoutes(privateGroup *gin.RouterGroup, l logger.Interface, uc us
 	r := &operationRoutes{l, uc}
 	{
 		h := privateGroup.Group("/operation")
+		h.GET("", r.getOperations)
 		h.POST("", r.createOperation)
 		h.PUT("/:id", r.updateOperation)
 		h.DELETE("/:id", r.deleteOperation)
@@ -85,4 +86,15 @@ func (r *operationRoutes) deleteOperation(c *gin.Context) {
 	}
 
 	c.Status(http.StatusOK)
+}
+
+func (r *operationRoutes) getOperations(c *gin.Context) {
+	res, err := r.uc.GetOperations(c.Request.Context())
+	if err != nil {
+		r.l.Error(err, "http - v1 - getOperations")
+		errors.ErrorResponse(c, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
 }
