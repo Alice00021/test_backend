@@ -13,6 +13,7 @@ import (
 
 	"test_go/pkg/httpserver"
 	"test_go/pkg/logger"
+	"test_go/pkg/mongodb"
 	"test_go/pkg/postgres"
 
 	"github.com/gin-gonic/gin"
@@ -37,6 +38,21 @@ func Run(cfg *config.Config) {
 	}
 	defer pg.Close()
 
+	// MongoDB Client
+	mongoClient, err := mongodb.New(mongodb.Config{
+		URI:      cfg.MongoDB.URI,
+		Database: cfg.MongoDB.Database,
+		Timeout:  cfg.MongoDB.Timeout,
+	})
+	if err != nil {
+		l.Fatal(fmt.Errorf("failed to init mongodb: %w", err))
+	}
+	defer func() {
+		if err := mongoClient.Close(); err != nil {
+			l.Error(fmt.Errorf("mongodb close error: %w", err))
+		}
+	}()
+
 	jwtManager := jwt.NewJWTManager(cfg.JWT.SecretKey)
 
 	// Transaction builder
@@ -49,7 +65,7 @@ func Run(cfg *config.Config) {
 	}
 
 	// Repo
-	repo := di.NewRepo(pg)
+	repo := di.NewRepo(pg, mongoClient)
 
 	// Use-Case
 	uc := di.NewUseCase(pgTx, repo, l, cfg, jwtManager)

@@ -17,13 +17,15 @@ import (
 )
 
 type UseCase struct {
-	Auth      usecase.Auth
-	User      usecase.User
-	Book      usecase.Book
-	Author    usecase.Author
-	Export    usecase.Export
-	Command   usecase.Command
-	Operation usecase.Operation
+	Auth           usecase.Auth
+	User           usecase.User
+	Book           usecase.Book
+	Author         usecase.Author
+	Export         usecase.Export
+	Command        usecase.Command
+	Operation      usecase.Operation
+	CommandMongo   usecase.CommandMongo
+	OperationMongo usecase.OperationMongo
 }
 
 func NewUseCase(
@@ -39,15 +41,20 @@ func NewUseCase(
 	authorUc := author.New(t, repo.AuthorRepo, l)
 	bookUc := book.New(t, repo.BookRepo, l)
 	commandUc := command.New(t, repo.CommandRepo, conf.LocalFileStorage, l)
+	commandMongoUc := command.NewMongo(repo.CommandMongoRepo, conf.LocalFileStorage, l)
+	OperationMongoUc := operation.NewMongo(repo.OperationMongoRepo, l)
 	operationUc := operation.New(t, repo.OperationRepo, repo.OperationCommandsRepo, repo.CommandRepo, l)
 	exportUc := export.New(authorUc, bookUc, commandUc, operationUc, l, conf.LocalFileStorage.ExportPath)
+
 	return &UseCase{
-		Auth:      authUc,
-		Author:    authorUc,
-		Book:      bookUc,
-		User:      userUc,
-		Export:    exportUc,
-		Command:   commandUc,
-		Operation: operationUc,
+		Auth:           authUc,
+		Author:         authorUc,
+		Book:           bookUc,
+		User:           userUc,
+		Export:         exportUc,
+		Command:        commandUc,
+		CommandMongo:   commandMongoUc,
+		Operation:      operationUc,
+		OperationMongo: OperationMongoUc,
 	}
 }

@@ -5,6 +5,7 @@ import (
 	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
 	"log"
+	"time"
 )
 
 type (
@@ -14,6 +15,7 @@ type (
 		HTTP             HTTP
 		Log              Log
 		PG               PG
+		MongoDB          MongoDB
 		RMQ              RMQ
 		RMQReceivers     RMQReceivers
 		Metrics          Metrics
@@ -47,6 +49,13 @@ type (
 		URL     string `env:"PG_URL,required"`
 	}
 
+	// MongoDB -.
+	MongoDB struct {
+		URI      string        `env:"MONGODB_URI,required"`
+		Database string        `env:"MONGODB_DATABASE,required"`
+		Timeout  time.Duration `env:"MONGODB_TIMEOUT" envDefault:"10s"`
+	}
+
 	// RMQ -.
 	RMQ struct {
 		ServerExchange string `env:"RMQ_RPC_SERVER_EXCHANGE,required"`
@@ -68,12 +77,14 @@ type (
 	Swagger struct {
 		Enabled bool `env:"SWAGGER_ENABLED" envDefault:"false"`
 	}
+
 	// LocalFileStorage -.
 	LocalFileStorage struct {
 		BasePath   string `env:"LOCAL_FILE_STORAGE_BASE_PATH,required"`
 		ExportPath string `env:"LOCAL_FILE_STORAGE_EXPORT_PATH,required"`
 		JsonPath   string `env:"LOCAL_FILE_STORAGE_JSON_PATH,required"`
 	}
+
 	// EmailConfig -.
 	EmailConfig struct {
 		SMTPHost       string `env:"SMTP_HOST,required"`
@@ -82,6 +93,7 @@ type (
 		SenderPassword string `env:"SENDER_PASSWORD,required"`
 		VerifyBaseURL  string `env:"VERIFY_BASE_URL,required"`
 	}
+
 	// JWTConfig -.
 	JWTConfig struct {
 		SecretKey string `env:"JWT_SECRET_KEY,required"`

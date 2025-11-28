@@ -53,4 +53,17 @@ type (
 		DeleteByOperationId(context.Context, int64) error
 		DeleteIfNotInOperationCommandIds(context.Context, int64, []int64) error
 	}
+
+	CommandMongoRepo interface {
+		Create(context.Context, *entity.Command) (*entity.Command, error)
+		Update(context.Context, string, *entity.Command) error
+		GetBySystemName(context.Context, string) (*entity.Command, error)
+		GetAll(context.Context) ([]entity.Command, error)
+	}
+
+	OperationMongoRepo interface {
+		Create(context.Context, *entity.Operation) (*entity.Operation, error)
+		Update(context.Context, *entity.Operation) error
+		DeleteById(context.Context, int64) error
+	}
 )

@@ -61,4 +61,13 @@ type (
 		UpdateOperation(context.Context, entity.UpdateOperationInput) error
 		DeleteOperation(context.Context, int64) error
 	}
+
+	CommandMongo interface {
+		UpdateCommands(context.Context) error
+		GetCommands(context.Context) (map[string]entity.Command, error)
+	}
+
+	OperationMongo interface {
+		DeleteOperation(context.Context, int64) error
+	}
 )
