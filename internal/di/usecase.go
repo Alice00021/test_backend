@@ -42,7 +42,7 @@ func NewUseCase(
 	bookUc := book.New(t, repo.BookRepo, l)
 	commandUc := command.New(t, repo.CommandRepo, conf.LocalFileStorage, l)
 	commandMongoUc := command.NewMongo(repo.CommandMongoRepo, conf.LocalFileStorage, l)
-	OperationMongoUc := operation.NewMongo(repo.OperationMongoRepo, l)
+	OperationMongoUc := operation.NewMongo(repo.OperationMongoRepo, repo.CommandMongoRepo, l)
 	operationUc := operation.New(t, repo.OperationRepo, repo.OperationCommandsRepo, repo.CommandRepo, l)
 	exportUc := export.New(authorUc, bookUc, commandUc, operationUc, l, conf.LocalFileStorage.ExportPath)
 

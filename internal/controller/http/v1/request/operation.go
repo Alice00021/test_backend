@@ -22,8 +22,8 @@ type UpdateOperationRequest struct {
 	Commands    []*entity.CommandInput `json:"commands"`
 }
 
-func (req *UpdateOperationRequest) ToEntity() entity.UpdateOperationInput {
-	return entity.UpdateOperationInput{
+func (req *UpdateOperationRequest) ToEntity() entity.UpdateOperationInputMongo {
+	return entity.UpdateOperationInputMongo{
 		Name:        req.Name,
 		Description: req.Description,
 		Commands:    req.Commands,

@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"github.com/xuri/excelize/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"mime/multipart"
 	"test_go/internal/entity"
 )
@@ -68,6 +69,9 @@ type (
 	}
 
 	OperationMongo interface {
-		DeleteOperation(context.Context, int64) error
+		CreateOperation(context.Context, entity.CreateOperationInput) (*entity.OperationMongo, error)
+		UpdateOperation(context.Context, entity.UpdateOperationInputMongo) error
+		GetOperations(context.Context) ([]*entity.OperationMongo, error)
+		DeleteOperation(context.Context, primitive.ObjectID) error
 	}
 )

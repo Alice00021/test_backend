@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"test_go/internal/entity"
 )
 
@@ -56,14 +57,17 @@ type (
 
 	CommandMongoRepo interface {
 		Create(context.Context, *entity.Command) (*entity.Command, error)
+		GetById(context.Context, primitive.ObjectID) (*entity.Command, error)
 		Update(context.Context, string, *entity.Command) error
-		GetBySystemName(context.Context, string) (*entity.Command, error)
+		GetBySystemName(context.Context) (map[string]entity.Command, error)
 		GetAll(context.Context) ([]entity.Command, error)
 	}
 
 	OperationMongoRepo interface {
-		Create(context.Context, *entity.Operation) (*entity.Operation, error)
-		Update(context.Context, *entity.Operation) error
-		DeleteById(context.Context, int64) error
+		Create(context.Context, *entity.OperationMongo) (*entity.OperationMongo, error)
+		Update(context.Context, *entity.OperationMongo) error
+		GetById(context.Context, primitive.ObjectID) (*entity.OperationMongo, error)
+		GetAll(context.Context) ([]*entity.OperationMongo, error)
+		DeleteById(context.Context, primitive.ObjectID) error
 	}
 )

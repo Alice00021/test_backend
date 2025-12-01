@@ -2,21 +2,21 @@ package v1
 
 import (
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 	"test_go/internal/controller/http/errors"
 	"test_go/internal/controller/http/v1/request"
 	"test_go/internal/usecase"
-	"test_go/internal/utils"
 	httpError "test_go/pkg/httpserver"
 	"test_go/pkg/logger"
 )
 
 type operationRoutes struct {
 	l  logger.Interface
-	uc usecase.Operation
+	uc usecase.OperationMongo
 }
 
-func NewOperationRoutes(privateGroup *gin.RouterGroup, l logger.Interface, uc usecase.Operation) {
+func NewOperationRoutes(privateGroup *gin.RouterGroup, l logger.Interface, uc usecase.OperationMongo) {
 	r := &operationRoutes{l, uc}
 	{
 		h := privateGroup.Group("/operation")
@@ -45,7 +45,9 @@ func (r *operationRoutes) createOperation(c *gin.Context) {
 }
 
 func (r *operationRoutes) updateOperation(c *gin.Context) {
-	id, err := utils.ParsePathParam(utils.ParseParams{Context: c, Key: "id"}, utils.ParseInt64)
+	idStr := c.Param("id")
+
+	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
 		r.l.Error(err, "http - v1 - updateOperation")
 		errors.ErrorResponse(c, httpError.NewBadPathParamsError(err))
@@ -71,7 +73,9 @@ func (r *operationRoutes) updateOperation(c *gin.Context) {
 }
 
 func (r *operationRoutes) deleteOperation(c *gin.Context) {
-	id, err := utils.ParsePathParam(utils.ParseParams{Context: c, Key: "id"}, utils.ParseInt64)
+	idStr := c.Param("id")
+
+	id, err := primitive.ObjectIDFromHex(idStr)
 	if err != nil {
 		r.l.Error(err, "http - v1 - deleteOperation")
 		errors.ErrorResponse(c, httpError.NewBadPathParamsError(err))
