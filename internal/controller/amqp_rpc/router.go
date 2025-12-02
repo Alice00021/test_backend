@@ -1,10 +1,10 @@
 package v1
 
 import (
+	"github.com/Alice00021/test_common/pkg/logger"
+	"github.com/Alice00021/test_common/pkg/rabbitmq/rmq_rpc/server"
 	v1 "test_go/internal/controller/amqp_rpc/v1"
 	"test_go/internal/di"
-	"test_go/pkg/logger"
-	"test_go/pkg/rabbitmq/rmq_rpc/server"
 )
 
 // NewRouter -.

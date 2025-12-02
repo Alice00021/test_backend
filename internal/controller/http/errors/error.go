@@ -2,10 +2,10 @@ package errors
 
 import (
 	"errors"
+	httpError "github.com/Alice00021/test_common/pkg/httpserver"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"test_go/internal/entity"
-	httpError "test_go/pkg/httpserver"
 )
 
 func ErrorResponse(c *gin.Context, err error) {

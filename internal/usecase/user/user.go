@@ -4,6 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/Alice00021/test_common/pkg/auth"
+	"github.com/Alice00021/test_common/pkg/jwt"
+	"github.com/Alice00021/test_common/pkg/logger"
+	"github.com/Alice00021/test_common/pkg/transactional"
 	"io"
 	"mime/multipart"
 	"os"
@@ -13,10 +17,6 @@ import (
 	"test_go/config"
 	"test_go/internal/entity"
 	"test_go/internal/repo"
-	"test_go/pkg/auth"
-	"test_go/pkg/jwt"
-	"test_go/pkg/logger"
-	"test_go/pkg/transactional"
 )
 
 type useCase struct {

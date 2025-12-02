@@ -2,19 +2,19 @@ package app
 
 import (
 	"fmt"
+	"github.com/Alice00021/test_common/pkg/jwt"
+	"github.com/Alice00021/test_common/pkg/rabbitmq/rmq_rpc/client"
+	"github.com/Alice00021/test_common/pkg/rabbitmq/rmq_rpc/server"
+	"github.com/Alice00021/test_common/pkg/transactional"
 	"os"
 	"os/signal"
 	"syscall"
 	"test_go/internal/di"
-	"test_go/pkg/jwt"
-	"test_go/pkg/rabbitmq/rmq_rpc/client"
-	"test_go/pkg/rabbitmq/rmq_rpc/server"
-	"test_go/pkg/transactional"
 
-	"test_go/pkg/httpserver"
-	"test_go/pkg/logger"
-	"test_go/pkg/mongodb"
-	"test_go/pkg/postgres"
+	"github.com/Alice00021/test_common/pkg/httpserver"
+	"github.com/Alice00021/test_common/pkg/logger"
+	"github.com/Alice00021/test_common/pkg/mongodb"
+	"github.com/Alice00021/test_common/pkg/postgres"
 
 	"github.com/gin-gonic/gin"
 

@@ -3,12 +3,12 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 
+	httpError "github.com/Alice00021/test_common/pkg/httpserver"
+	"github.com/Alice00021/test_common/pkg/logger"
 	"net/http"
 	"test_go/internal/controller/http/errors"
 	"test_go/internal/controller/http/v1/request"
 	"test_go/internal/usecase"
-	httpError "test_go/pkg/httpserver"
-	"test_go/pkg/logger"
 )
 
 type authRoutes struct {

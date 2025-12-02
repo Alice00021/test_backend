@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"errors"
+	httpError "github.com/Alice00021/test_common/pkg/httpserver"
 	"github.com/gin-gonic/gin"
 	"slices"
 	"strconv"
@@ -10,7 +11,6 @@ import (
 	er "test_go/internal/controller/http/errors"
 	auth "test_go/internal/entity"
 	"test_go/internal/usecase"
-	httpError "test_go/pkg/httpserver"
 )
 
 var ErrUnauthorized = errors.New("unauthorized")

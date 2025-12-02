@@ -7,9 +7,9 @@ import (
 	"test_go/config"
 
 	"fmt"
+	"github.com/Alice00021/test_common/pkg/logger"
 	"test_go/internal/entity"
 	"test_go/internal/repo"
-	"test_go/pkg/logger"
 )
 
 type useCaseMongo struct {

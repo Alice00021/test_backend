@@ -3,9 +3,9 @@ package persistent
 import (
 	"context"
 	"fmt"
+	"github.com/Alice00021/test_common/pkg/postgres"
 	"github.com/Masterminds/squirrel"
 	"test_go/internal/entity"
-	"test_go/pkg/postgres"
 )
 
 type OperationCommandsRepo struct {

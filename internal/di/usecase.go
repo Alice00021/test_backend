@@ -1,6 +1,9 @@
 package di
 
 import (
+	"github.com/Alice00021/test_common/pkg/jwt"
+	"github.com/Alice00021/test_common/pkg/logger"
+	"github.com/Alice00021/test_common/pkg/transactional"
 	"sync"
 	"test_go/config"
 	"test_go/internal/usecase"
@@ -11,9 +14,6 @@ import (
 	"test_go/internal/usecase/export"
 	"test_go/internal/usecase/operation"
 	"test_go/internal/usecase/user"
-	"test_go/pkg/jwt"
-	"test_go/pkg/logger"
-	"test_go/pkg/transactional"
 )
 
 type UseCase struct {

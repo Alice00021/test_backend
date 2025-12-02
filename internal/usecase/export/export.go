@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/csv"
 	"fmt"
+	"github.com/Alice00021/test_common/pkg/logger"
 	"github.com/google/uuid"
 	"github.com/jung-kurt/gofpdf"
 	"github.com/xuri/excelize/v2"
@@ -12,7 +13,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"test_go/internal/usecase"
-	"test_go/pkg/logger"
 	"time"
 )
 

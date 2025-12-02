@@ -4,12 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/Alice00021/test_common/pkg/logger"
+	rmqrpc "github.com/Alice00021/test_common/pkg/rabbitmq/rmq_rpc"
+	"github.com/Alice00021/test_common/pkg/rabbitmq/rmq_rpc/server"
 	"test_go/internal/controller/amqp_rpc/v1/request"
 	"test_go/internal/entity"
 	"test_go/internal/usecase"
-	"test_go/pkg/logger"
-	rmqrpc "test_go/pkg/rabbitmq/rmq_rpc"
-	"test_go/pkg/rabbitmq/rmq_rpc/server"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )

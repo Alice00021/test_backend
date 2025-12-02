@@ -1,14 +1,14 @@
 package v1
 
 import (
+	httpError "github.com/Alice00021/test_common/pkg/httpserver"
+	"github.com/Alice00021/test_common/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"test_go/internal/controller/http/errors"
 	"test_go/internal/controller/http/v1/request"
 	"test_go/internal/usecase"
 	"test_go/internal/utils"
-	httpError "test_go/pkg/httpserver"
-	"test_go/pkg/logger"
 )
 
 type authorRoutes struct {

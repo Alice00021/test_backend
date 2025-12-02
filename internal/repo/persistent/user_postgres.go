@@ -8,8 +8,8 @@ import (
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"
 
+	"github.com/Alice00021/test_common/pkg/postgres"
 	"test_go/internal/entity"
-	"test_go/pkg/postgres"
 )
 
 type UserRepo struct {

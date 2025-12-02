@@ -1,11 +1,11 @@
 package v1
 
 import (
+	"github.com/Alice00021/test_common/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"test_go/internal/controller/http/errors"
 	"test_go/internal/usecase"
-	"test_go/pkg/logger"
 )
 
 type commandRoutes struct {

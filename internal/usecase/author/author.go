@@ -3,8 +3,8 @@ package author
 import (
 	"context"
 	"fmt"
-	"test_go/pkg/logger"
-	"test_go/pkg/transactional"
+	"github.com/Alice00021/test_common/pkg/logger"
+	"github.com/Alice00021/test_common/pkg/transactional"
 
 	"test_go/internal/entity"
 	"test_go/internal/repo"

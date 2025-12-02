@@ -1,11 +1,11 @@
 package di
 
 import (
+	m "github.com/Alice00021/test_common/pkg/mongodb"
+	"github.com/Alice00021/test_common/pkg/postgres"
 	"test_go/internal/repo"
 	mongodb "test_go/internal/repo/mongodb"
 	"test_go/internal/repo/persistent"
-	m "test_go/pkg/mongodb"
-	"test_go/pkg/postgres"
 )
 
 type Repo struct {

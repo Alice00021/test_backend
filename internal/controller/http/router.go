@@ -1,13 +1,13 @@
 package http
 
 import (
+	"github.com/Alice00021/test_common/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"net/http"
 	"test_go/internal/controller/http/middleware"
 	v1 "test_go/internal/controller/http/v1"
 	"test_go/internal/di"
-	"test_go/pkg/logger"
 
 	"test_go/config"
 	//_ "github.com/finance/fileService/docs" // Swagger docs.
