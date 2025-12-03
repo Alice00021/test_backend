@@ -59,6 +59,7 @@ type (
 	Operation interface {
 		CreateOperation(context.Context, entity.CreateOperationInput) (*entity.Operation, error)
 		GetOperations(context.Context) (map[int64]*entity.Operation, error)
+		GetOperation(context.Context, int64) (*entity.Operation, error)
 		UpdateOperation(context.Context, entity.UpdateOperationInput) error
 		DeleteOperation(context.Context, int64) error
 	}

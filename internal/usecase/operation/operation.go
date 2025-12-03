@@ -203,6 +203,15 @@ func (uc *useCase) GetOperations(ctx context.Context) (map[int64]*entity.Operati
 	return operations, nil
 }
 
+func (uc *useCase) GetOperation(ctx context.Context, id int64) (*entity.Operation, error) {
+	book, err := uc.opRepo.GetById(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("OperationUseCase - GetOperation - uc.opRepo.GetById: %w", err)
+	}
+
+	return book, nil
+}
+
 func (uc *useCase) DeleteOperation(ctx context.Context, id int64) error {
 	op := "OperationUseCase - DeleteOperation"
 
