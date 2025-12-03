@@ -22,10 +22,10 @@ func newBookRoutes(routes map[string]server.CallHandler, uc usecase.Book, l logg
 	r := &bookRoutes{uc, l}
 	{
 		routes["v1.createBook"] = r.createBook()
-		routes["v1.updateAuthor"] = r.updateBook()
+		routes["v1.updateBook"] = r.updateBook()
 		routes["v1.getBook"] = r.getBook()
-		routes["v1.getAuthors"] = r.getBooks()
-		routes["v1.deleteAuthor"] = r.deleteBook()
+		routes["v1.getBooks"] = r.getBooks()
+		routes["v1.deleteBook"] = r.deleteBook()
 	}
 }
 
