@@ -28,3 +28,7 @@ type AuthenticateRequest struct {
 type VerifyEmailRequest struct {
 	Token string `form:"token" validate:"required"`
 }
+
+type ValidateTokenRequest struct {
+	AccessToken string `json:"accessToken" binding:"required"`
+}

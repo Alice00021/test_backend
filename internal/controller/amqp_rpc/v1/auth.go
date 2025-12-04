@@ -25,6 +25,7 @@ func newAuthRoutes(routes map[string]server.CallHandler, uc usecase.Auth, l logg
 		routes["v1.register"] = r.register()
 		routes["v1.login"] = r.login()
 		routes["v1.verifyEmail"] = r.verifyEmail()
+		routes["v1.validationToken"] = r.validateToken()
 	}
 }
 
@@ -87,5 +88,27 @@ func (r *authRoutes) verifyEmail() server.CallHandler {
 		}
 
 		return nil, nil
+	}
+}
+
+func (r *authRoutes) validateToken() server.CallHandler {
+	return func(d *amqp.Delivery) (interface{}, error) {
+		var req request.ValidateTokenRequest
+		if err := json.Unmarshal(d.Body, &req); err != nil {
+			r.l.Error(err, "amqp_rpc - v1 - validateToken")
+			return nil, rmqrpc.NewMessageError(rmqrpc.InvalidArgument, err)
+		}
+
+		res, err := r.uc.Validation(context.Background(), req.AccessToken)
+		if err != nil {
+			if errors.Is(err, entity.ErrInvalidToken) || errors.Is(err, entity.ErrExpiredToken) {
+				return nil, rmqrpc.NewMessageError(rmqrpc.Unauthorized, err)
+			}
+
+			r.l.Error(err, "amqp_rpc - v1 - validateToken")
+			return nil, rmqrpc.NewMessageError(rmqrpc.Internal, err)
+		}
+
+		return res, nil
 	}
 }
