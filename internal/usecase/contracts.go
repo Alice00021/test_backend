@@ -14,7 +14,7 @@ type (
 		Login(context.Context, string, string) (*entity.TokenPair, error)
 		VerifyEmail(context.Context, string) error
 		RefreshTokens(context.Context, string) (*entity.TokenPair, error)
-		Validation(context.Context, string) (*entity.UserInfoToken, error)
+		ValidateToken(context.Context, string) (*entity.UserInfoToken, error)
 	}
 
 	User interface {

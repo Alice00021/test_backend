@@ -99,7 +99,7 @@ func (r *authRoutes) validateToken() server.CallHandler {
 			return nil, rmqrpc.NewMessageError(rmqrpc.InvalidArgument, err)
 		}
 
-		res, err := r.uc.Validation(context.Background(), req.AccessToken)
+		res, err := r.uc.ValidateToken(context.Background(), req.AccessToken)
 		if err != nil {
 			if errors.Is(err, entity.ErrInvalidToken) || errors.Is(err, entity.ErrExpiredToken) {
 				return nil, rmqrpc.NewMessageError(rmqrpc.Unauthorized, err)

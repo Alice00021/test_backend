@@ -17,6 +17,7 @@ type (
 		PG               PG
 		MongoDB          MongoDB
 		RMQ              RMQ
+		Auth             Auth
 		RMQReceivers     RMQReceivers
 		Metrics          Metrics
 		Swagger          Swagger
@@ -62,6 +63,14 @@ type (
 		ClientExchange string `env:"RMQ_RPC_CLIENT_EXCHANGE,required"`
 		ClientPrefix   string `env:"RMQ_RPC_CLIENT_PREFIX,required"`
 		URL            string `env:"RMQ_URL,required"`
+	}
+
+	// Auth -.
+	Auth struct {
+		PrivateKey            string        `env:"AUTH_PRIVATE_KEY,required"`
+		PublicKey             string        `env:"AUTH_PUBLIC_KEY,required"`
+		AccessTokenExpiresIn  time.Duration `env:"AUTH_ACCESS_TOKEN_EXPIRED_IN,required"`
+		RefreshTokenExpiresIn time.Duration `env:"AUTH_REFRESH_TOKEN_EXPIRED_IN,required"`
 	}
 
 	// RMQReceivers -.

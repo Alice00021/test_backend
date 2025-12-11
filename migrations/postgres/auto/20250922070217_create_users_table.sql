@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users
     password     VARCHAR(100) UNIQUE NOT NULL,
     role         VARCHAR(100) NOT NULL,
     file_path    VARCHAR(100),
-    verify_token VARCHAR(100),
+    verify_token VARCHAR(500),
     is_verified  BOOLEAN NOT NULL DEFAULT FALSE,
     rating       DOUBLE PRECISION NOT NULL
 );

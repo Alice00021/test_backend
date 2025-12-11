@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Alice00021/test_common/pkg/auth"
-	"github.com/Alice00021/test_common/pkg/jwt"
 	"github.com/Alice00021/test_common/pkg/logger"
 	"github.com/Alice00021/test_common/pkg/transactional"
 	"io"
@@ -23,7 +22,6 @@ type useCase struct {
 	transactional.Transactional
 	l               logger.Interface
 	repo            repo.UserRepo
-	jwtManager      *jwt.JWTManager
 	storageBasePath string
 	emailConfig     *config.EmailConfig
 	mtx             *sync.Mutex
@@ -32,7 +30,6 @@ type useCase struct {
 func New(t transactional.Transactional,
 	l logger.Interface,
 	repo repo.UserRepo,
-	jwtManager *jwt.JWTManager,
 	sbp string,
 	emailConfig *config.EmailConfig,
 	mtx *sync.Mutex,
@@ -41,7 +38,6 @@ func New(t transactional.Transactional,
 		Transactional:   t,
 		l:               l,
 		repo:            repo,
-		jwtManager:      jwtManager,
 		storageBasePath: sbp,
 		emailConfig:     emailConfig,
 		mtx:             mtx,

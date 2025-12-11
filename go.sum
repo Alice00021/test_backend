@@ -2,6 +2,8 @@ github.com/Alice00021/test_common v0.0.0-20251202090114-85b33b096b8c h1:U2MpZqax
 github.com/Alice00021/test_common v0.0.0-20251202090114-85b33b096b8c/go.mod h1:bpVN7938MD3I6f+xRg8U9Msf7piy0RBJ76LK+V/pxbo=
 github.com/Alice00021/test_common v0.0.0-20251202101830-702548e8645c h1:3WLGUB9cGR0JyDIhSFgOv7j2LKwv3GqJFpNJZPMEtnI=
 github.com/Alice00021/test_common v0.0.0-20251202101830-702548e8645c/go.mod h1:bpVN7938MD3I6f+xRg8U9Msf7piy0RBJ76LK+V/pxbo=
+github.com/Alice00021/test_common v0.0.0-20251211110940-612cc8488d98 h1:lvChul1DYsw4lYqMeHdz0UuUuGO5wR/eHll14dawXq8=
+github.com/Alice00021/test_common v0.0.0-20251211110940-612cc8488d98/go.mod h1:bpVN7938MD3I6f+xRg8U9Msf7piy0RBJ76LK+V/pxbo=
 github.com/BurntSushi/toml v1.5.0 h1:W5quZX/G/csjUnuI8SUYlsHs9M38FC7znL0lIO+DvMg=
 github.com/BurntSushi/toml v1.5.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc=

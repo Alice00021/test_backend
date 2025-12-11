@@ -59,7 +59,7 @@ func JwtAuthMiddleware(uc usecase.Auth) gin.HandlerFunc {
 		t := strings.Split(authHeader, " ")
 		if len(t) == 2 {
 			authToken := t[1]
-			userInfo, err := uc.Validation(context.Background(), authToken)
+			userInfo, err := uc.ValidateToken(context.Background(), authToken)
 			if err == nil {
 				c.Set(userKey, userInfo)
 				c.Next()
@@ -79,7 +79,7 @@ func JwtWsValidator(uc usecase.Auth) func(token string) (map[string]*string, err
 		t := strings.Split(token, " ")
 		if len(t) == 2 {
 			authToken := t[1]
-			userInfo, err := uc.Validation(context.Background(), authToken)
+			userInfo, err := uc.ValidateToken(context.Background(), authToken)
 			if err != nil {
 				return nil, err
 			}

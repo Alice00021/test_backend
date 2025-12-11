@@ -1,7 +1,6 @@
 package di
 
 import (
-	"github.com/Alice00021/test_common/pkg/jwt"
 	"github.com/Alice00021/test_common/pkg/logger"
 	"github.com/Alice00021/test_common/pkg/transactional"
 	"sync"
@@ -33,11 +32,10 @@ func NewUseCase(
 	repo *Repo,
 	l logger.Interface,
 	conf *config.Config,
-	jwtManager *jwt.JWTManager,
 ) *UseCase {
 	txMtx := &sync.Mutex{}
-	authUc := auth.New(t, l, repo.UserRepo, jwtManager, conf.LocalFileStorage.BasePath, &conf.EmailConfig, txMtx)
-	userUc := user.New(t, l, repo.UserRepo, jwtManager, conf.LocalFileStorage.BasePath, &conf.EmailConfig, txMtx)
+	authUc := auth.New(t, l, repo.UserRepo, conf.Auth, conf.LocalFileStorage.BasePath, &conf.EmailConfig, txMtx)
+	userUc := user.New(t, l, repo.UserRepo, conf.LocalFileStorage.BasePath, &conf.EmailConfig, txMtx)
 	authorUc := author.New(t, repo.AuthorRepo, l)
 	bookUc := book.New(t, repo.BookRepo, l)
 	commandUc := command.New(t, repo.CommandRepo, conf.LocalFileStorage, l)

@@ -2,8 +2,7 @@ package auth
 
 import (
 	"context"
-	"crypto/rand"
-	"encoding/hex"
+	"crypto/rsa"
 	"errors"
 	"fmt"
 	"github.com/Alice00021/test_common/pkg/auth"
@@ -22,7 +21,9 @@ type useCase struct {
 	transactional.Transactional
 	l               logger.Interface
 	repo            repo.UserRepo
-	jwtManager      *jwt.JWTManager
+	cfg             config.Auth
+	PrivateKey      *rsa.PrivateKey
+	PublicKey       *rsa.PublicKey
 	storageBasePath string
 	emailConfig     *config.EmailConfig
 	mtx             *sync.Mutex
@@ -31,16 +32,23 @@ type useCase struct {
 func New(t transactional.Transactional,
 	l logger.Interface,
 	repo repo.UserRepo,
-	jwtManager *jwt.JWTManager,
+	cfg config.Auth,
 	sbp string,
 	emailConfig *config.EmailConfig,
 	mtx *sync.Mutex,
 ) *useCase {
+	privateKey, err := jwt.DecodePrivateKey([]byte(cfg.PrivateKey))
+	if err != nil {
+		l.Fatal("AuthUseCase - New - jwt.DecodePrivateKey error - %s", err)
+	}
+
 	return &useCase{
 		Transactional:   t,
 		l:               l,
 		repo:            repo,
-		jwtManager:      jwtManager,
+		cfg:             cfg,
+		PrivateKey:      privateKey,
+		PublicKey:       &privateKey.PublicKey,
 		storageBasePath: sbp,
 		emailConfig:     emailConfig,
 		mtx:             mtx,
@@ -61,10 +69,17 @@ func (uc *useCase) Register(ctx context.Context, inp entity.CreateUserInput) (*e
 			return fmt.Errorf("uc.repo.GetByEmail: %w", err)
 		}
 
-		verifyToken, err := generateVerifyToken()
-		if err != nil {
-			return entity.ErrGenerateVerifyToken
+		userInfo := &entity.UserInfoToken{
+			ID:   0,
+			Role: entity.UserRoleClient,
 		}
+
+		tokenPair, err := uc.generateTokens(userInfo)
+		if err != nil {
+			return fmt.Errorf("uc.generateTokens: %w", err)
+		}
+
+		verifyToken := tokenPair.AccessToken
 
 		e := entity.NewUser(
 			inp.Name, inp.Surname, inp.Username, inp.Password, inp.Email,
@@ -100,7 +115,6 @@ func (uc *useCase) Register(ctx context.Context, inp entity.CreateUserInput) (*e
 func (uc *useCase) Login(ctx context.Context, username string, password string) (*entity.TokenPair, error) {
 	op := "AuthUseCase - Login"
 
-	var tokenPair entity.TokenPair
 	user, err := uc.repo.GetByUserName(ctx, username)
 	if err != nil {
 		return nil, fmt.Errorf("%s - uc.repo.GetByUserName: %w", op, err)
@@ -114,19 +128,17 @@ func (uc *useCase) Login(ctx context.Context, username string, password string) 
 		return nil, fmt.Errorf("%s - invalid credentials", op)
 	}
 
-	accessToken, err := uc.jwtManager.GenerateAccessToken(user.ID, user.Username)
-	if err != nil {
-		return nil, fmt.Errorf("%s - uc.jwtManager.GenerateAccessToken: %w", op, err)
+	userInfo := &entity.UserInfoToken{
+		ID:   user.ID,
+		Role: user.Role,
 	}
 
-	refreshToken, err := uc.jwtManager.GenerateRefreshToken(user.ID, user.Username)
+	tokenPair, err := uc.generateTokens(userInfo)
 	if err != nil {
-		return nil, fmt.Errorf("%s - uc.jwtManager.GenerateRefreshToken: %w", op, err)
+		return nil, fmt.Errorf("uc.generateTokens: %w", err)
 	}
-	tokenPair.AccessToken = accessToken
-	tokenPair.RefreshToken = refreshToken
 
-	return &tokenPair, nil
+	return tokenPair, nil
 }
 
 func (uc *useCase) VerifyEmail(ctx context.Context, token string) error {
@@ -151,47 +163,23 @@ func (uc *useCase) VerifyEmail(ctx context.Context, token string) error {
 }
 
 func (uc *useCase) RefreshTokens(ctx context.Context, refreshToken string) (*entity.TokenPair, error) {
+	op := "AuthUseCase - RefreshTokens"
 
-	claims, err := uc.jwtManager.ParseToken(refreshToken)
+	claims, err := jwt.ValidateToken(refreshToken, uc.PublicKey)
 	if err != nil {
-		return nil, entity.ErrInvalidRefreshToken
-	}
-	user, err := uc.repo.GetByUserName(ctx, claims.Username)
-	if err != nil {
-		return nil, entity.ErrUserNotFound
-	}
-	var token entity.TokenPair
-
-	acessToken, err := uc.jwtManager.GenerateAccessToken(user.ID, user.Username)
-	if err != nil {
-		return nil, fmt.Errorf("uc.jwtManager.GenerateAccessToken: %w", err)
+		return nil, fmt.Errorf("%s - jwt.ValidateToken: %w", op, entity.ErrInvalidRefreshToken)
 	}
 
-	newRefreshToken, err := uc.jwtManager.GenerateRefreshToken(user.ID, user.Username)
-	if err != nil {
-		return nil, fmt.Errorf("uc.jwtManager.GenerateRefreshToken: %w", err)
+	data, ok := claims["data"].(map[string]interface{})
+	if !ok {
+		return nil, fmt.Errorf("%s - invalid token data: %w", op, entity.ErrInvalidRefreshToken)
 	}
 
-	token.AccessToken = acessToken
-	token.RefreshToken = newRefreshToken
+	userID := int64(data["id"].(float64))
 
-	return &token, nil
-}
-
-func (uc *useCase) Validation(ctx context.Context, tokenString string) (*entity.UserInfoToken, error) {
-	op := "AuthUseCase - Validation"
-
-	claims, err := uc.jwtManager.ParseToken(tokenString)
+	user, err := uc.repo.GetById(ctx, userID)
 	if err != nil {
-		if errors.Is(err, entity.ErrExpiredToken) {
-			return nil, entity.ErrExpiredToken
-		}
-		return nil, entity.ErrInvalidToken
-	}
-
-	user, err := uc.repo.GetById(ctx, claims.UserID)
-	if err != nil {
-		return nil, fmt.Errorf("%s - uc.repo.GetByID: %w", op, err)
+		return nil, fmt.Errorf("%s - uc.repo.GetById: %w", op, entity.ErrUserNotFound)
 	}
 
 	userInfo := &entity.UserInfoToken{
@@ -199,16 +187,50 @@ func (uc *useCase) Validation(ctx context.Context, tokenString string) (*entity.
 		Role: user.Role,
 	}
 
-	return userInfo, nil
+	tokenPair, err := uc.generateTokens(userInfo)
+	if err != nil {
+		return nil, fmt.Errorf("%s - uc.generateTokens: %w", op, err)
+	}
+
+	return tokenPair, nil
 }
 
-func generateVerifyToken() (string, error) {
-	bytes := make([]byte, 16)
-	_, err := rand.Read(bytes)
+func (s *useCase) ValidateToken(ctx context.Context, token string) (*entity.UserInfoToken, error) {
+	claims, err := jwt.ValidateToken(token, s.PublicKey)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return hex.EncodeToString(bytes), nil
+
+	if data, ok := claims["data"].(map[string]interface{}); ok {
+		id := data["id"]
+		role := data["role"]
+
+		return &entity.UserInfoToken{
+			ID:   int64(id.(float64)),
+			Role: entity.UserRole(role.(string)),
+		}, nil
+	}
+
+	return nil, jwt.ErrInvalidToken
+
+}
+
+func (s *useCase) generateTokens(user *entity.UserInfoToken) (*entity.TokenPair, error) {
+	data := make(map[string]interface{})
+	data["id"] = user.ID
+	data["role"] = user.Role
+
+	accessToken, err := jwt.GenerateToken(s.cfg.AccessTokenExpiresIn, data, s.PrivateKey, "")
+	if err != nil {
+		return nil, fmt.Errorf("jwt token: %v", err)
+	}
+
+	refreshToken, err := jwt.GenerateToken(s.cfg.RefreshTokenExpiresIn, data, s.PrivateKey, "")
+	if err != nil {
+		return nil, fmt.Errorf("jwt token: %v", err)
+	}
+
+	return &entity.TokenPair{RefreshToken: refreshToken, AccessToken: accessToken}, nil
 }
 
 func (uc *useCase) sendVerificationEmail(email, token string) error {

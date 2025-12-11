@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-	"github.com/Alice00021/test_common/pkg/jwt"
 	"github.com/Alice00021/test_common/pkg/rabbitmq/rmq_rpc/client"
 	"github.com/Alice00021/test_common/pkg/rabbitmq/rmq_rpc/server"
 	"github.com/Alice00021/test_common/pkg/transactional"
@@ -53,8 +52,6 @@ func Run(cfg *config.Config) {
 		}
 	}()
 
-	jwtManager := jwt.NewJWTManager(cfg.JWT.SecretKey)
-
 	// Transaction builder
 	pgTx := transactional.NewPgTransaction(pg)
 
@@ -68,7 +65,7 @@ func Run(cfg *config.Config) {
 	repo := di.NewRepo(pg, mongoClient)
 
 	// Use-Case
-	uc := di.NewUseCase(pgTx, repo, l, cfg, jwtManager)
+	uc := di.NewUseCase(pgTx, repo, l, cfg)
 
 	// RabbitMQ RPC Server
 	rmqRouter := amqprpc.NewRouter(uc, l)

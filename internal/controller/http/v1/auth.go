@@ -47,7 +47,6 @@ func (r *authRoutes) register(c *gin.Context) {
 
 func (r *authRoutes) login(c *gin.Context) {
 	var req request.AuthenticateRequest
-
 	if err := c.ShouldBindJSON(&req); err != nil {
 		r.l.Error(err, "http - v1 - login")
 		errors.ErrorResponse(c, httpError.NewBadRequestBodyError(err))
