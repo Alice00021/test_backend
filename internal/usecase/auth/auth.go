@@ -71,7 +71,7 @@ func (uc *useCase) Register(ctx context.Context, inp entity.CreateUserInput) (*e
 
 		userInfo := &entity.UserInfoToken{
 			ID:   0,
-			Role: entity.UserRoleClient,
+			Role: user.Role,
 		}
 
 		tokenPair, err := uc.generateTokens(userInfo)
