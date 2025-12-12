@@ -17,3 +17,5 @@ test-go/
 json-storage/
 
 logs/
+
+jwt_private.pem

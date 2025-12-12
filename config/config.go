@@ -71,6 +71,7 @@ type (
 		PublicKey             string        `env:"AUTH_PUBLIC_KEY,required"`
 		AccessTokenExpiresIn  time.Duration `env:"AUTH_ACCESS_TOKEN_EXPIRED_IN,required"`
 		RefreshTokenExpiresIn time.Duration `env:"AUTH_REFRESH_TOKEN_EXPIRED_IN,required"`
+		PrivateKeyFile        string        `env:"AUTH_PRIVATE_KEY_FILE,required"`
 	}
 
 	// RMQReceivers -.

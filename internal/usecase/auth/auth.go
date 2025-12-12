@@ -37,18 +37,25 @@ func New(t transactional.Transactional,
 	emailConfig *config.EmailConfig,
 	mtx *sync.Mutex,
 ) *useCase {
+	//encryptionRsa, err := jwt.New(cfg.PrivateKeyFile, "")
+	//if err != nil {
+	//	l.Fatal("AuthUseCase - New - jwt.New error - %s", err)
+	//}
+
 	privateKey, err := jwt.DecodePrivateKey([]byte(cfg.PrivateKey))
 	if err != nil {
 		l.Fatal("AuthUseCase - New - jwt.DecodePrivateKey error - %s", err)
 	}
 
 	return &useCase{
-		Transactional:   t,
-		l:               l,
-		repo:            repo,
-		cfg:             cfg,
-		PrivateKey:      privateKey,
-		PublicKey:       &privateKey.PublicKey,
+		Transactional: t,
+		l:             l,
+		repo:          repo,
+		cfg:           cfg,
+		PrivateKey:    privateKey,
+		PublicKey:     &privateKey.PublicKey,
+		//PrivateKey:      encryptionRsa.PrivateKey,
+		//PublicKey:       encryptionRsa.PublicKey,
 		storageBasePath: sbp,
 		emailConfig:     emailConfig,
 		mtx:             mtx,

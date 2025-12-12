@@ -4,6 +4,10 @@ github.com/Alice00021/test_common v0.0.0-20251202101830-702548e8645c h1:3WLGUB9c
 github.com/Alice00021/test_common v0.0.0-20251202101830-702548e8645c/go.mod h1:bpVN7938MD3I6f+xRg8U9Msf7piy0RBJ76LK+V/pxbo=
 github.com/Alice00021/test_common v0.0.0-20251211110940-612cc8488d98 h1:lvChul1DYsw4lYqMeHdz0UuUuGO5wR/eHll14dawXq8=
 github.com/Alice00021/test_common v0.0.0-20251211110940-612cc8488d98/go.mod h1:bpVN7938MD3I6f+xRg8U9Msf7piy0RBJ76LK+V/pxbo=
+github.com/Alice00021/test_common v0.0.0-20251212110218-bda8838a4d8e h1:KENHphhCwaqXJk/XRv77g5V+aDcqrwH1gs0Cl6rY00o=
+github.com/Alice00021/test_common v0.0.0-20251212110218-bda8838a4d8e/go.mod h1:bc3p9qIqy/DliFz33utTLGX3ytCZKDPTVM5OgG3WB10=
+github.com/Alice00021/test_common v0.0.0-20251212110517-4428ccd70869 h1:uwEe19HDwHcfBgDUQ5SsV2WjVfRt2J4XnKQZRBfeiro=
+github.com/Alice00021/test_common v0.0.0-20251212110517-4428ccd70869/go.mod h1:LJW9IPG5zCkeg4ApxsjSpxsjPCirkn1TkpSP45JxxlU=
 github.com/BurntSushi/toml v1.5.0 h1:W5quZX/G/csjUnuI8SUYlsHs9M38FC7znL0lIO+DvMg=
 github.com/BurntSushi/toml v1.5.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/KyleBanks/depth v1.2.1 h1:5h8fQADFrWtarTdtDudMmGsC7GPbOAu6RVB3ffsVFHc=
@@ -27,6 +31,8 @@ github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSV
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
+github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
 github.com/gabriel-vasile/mimetype v1.4.9 h1:5k+WDwEsD9eTLL8Tz3L0VnmVh9QxGjRmjBvAG7U/oYY=
 github.com/gabriel-vasile/mimetype v1.4.9/go.mod h1:WnSQhFKJuBlRyLiKohA/2DtIlPFAbguNaG7QCHcyGok=
 github.com/gin-contrib/gzip v0.0.6 h1:NjcunTcGAj5CO1gn4N8jHOSIeRFHIbn51z6K+xaN4d4=
