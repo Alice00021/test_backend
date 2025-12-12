@@ -112,6 +112,7 @@ func (uc *useCase) ExportCommandsToCSV(ctx context.Context) ([]byte, string, err
 	}
 
 	var buf bytes.Buffer
+	buf.Write([]byte{0xEF, 0xBB, 0xBF})
 	writer := csv.NewWriter(&buf)
 
 	headers := []string{

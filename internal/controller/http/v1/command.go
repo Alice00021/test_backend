@@ -10,10 +10,10 @@ import (
 
 type commandRoutes struct {
 	l  logger.Interface
-	uc usecase.CommandMongo
+	uc usecase.Command
 }
 
-func NewCommandRoutes(privateGroup *gin.RouterGroup, l logger.Interface, uc usecase.CommandMongo) {
+func NewCommandRoutes(privateGroup *gin.RouterGroup, l logger.Interface, uc usecase.Command) {
 	r := &commandRoutes{l, uc}
 	{
 		h := privateGroup.Group("/commands")
